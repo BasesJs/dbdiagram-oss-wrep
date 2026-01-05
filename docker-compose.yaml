@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # Web application (Quasar/Vue SPA)
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.prod
+    container_name: dbdiagram-oss-web
+    ports:
+      - "8880:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - dbdiagram-network
+
+  # Development service (optional - for hot-reload development)
+  web-dev:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.dev
+    container_name: dbdiagram-oss-web-dev
+    ports:
+      - "3210:3210"
+    volumes:
+      - ./web:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: yarn dev
+    networks:
+      - dbdiagram-network
+    profiles:
+      - dev
+
+networks:
+  dbdiagram-network:
+    driver: bridge

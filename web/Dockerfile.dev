@@ -1,0 +1,22 @@
+# Development Dockerfile with hot-reload
+FROM node:16-alpine
+
+WORKDIR /app
+
+# Install Quasar CLI globally
+RUN yarn global add @quasar/cli
+
+# Copy package files
+COPY package.json yarn.lock ./
+
+# Install dependencies
+RUN yarn install
+
+# Copy source code
+COPY . .
+
+# Expose development port
+EXPOSE 3210
+
+# Start development server
+CMD ["yarn", "dev"]
